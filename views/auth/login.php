@@ -1,0 +1,268 @@
+<?php
+/**
+ * Login view — variables provided by AuthController via Controller::render():
+ *
+ * @var string $csrf   CSRF token for form submission
+ * @var array  $errors Validation error messages (may be empty)
+ * @var string $email  Previously submitted email (optional, on re-render)
+ */
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — Smart Commerce Core</title>
+    <meta name="description" content="Log in to Smart Commerce Core — the intelligent LMS for commerce education.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg:        #f5f6fa;
+            --surface:   #ffffff;
+            --border:    #e8eaed;
+            --text:      #1a1a2e;
+            --muted:     #8a8fa8;
+            --accent:    #e53935;
+            --accent2:   #ff5722;
+            --danger:    #c62828;
+            --danger-bg: #ffebee;
+            --input-bg:  #f9fafb;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* ── Left Panel ── */
+        .left-panel {
+            flex: 0 0 42%;
+            background: #1a1a2e;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+        .left-panel::before {
+            content: '';
+            position: absolute; top: -100px; right: -80px;
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(229,57,53,0.25) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .left-panel::after {
+            content: '';
+            position: absolute; bottom: -80px; left: -60px;
+            width: 260px; height: 260px;
+            background: radial-gradient(circle, rgba(255,87,34,0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .brand { position: relative; z-index: 1; }
+        .brand-logo {
+            width: 52px; height: 52px;
+            background: var(--accent);
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 26px; color: #fff; font-weight: 800;
+            margin-bottom: 28px;
+        }
+        .brand h1 {
+            font-size: 1.9rem; font-weight: 800;
+            color: #ffffff; line-height: 1.2; margin-bottom: 12px;
+        }
+        .brand h1 span { color: var(--accent); }
+        .brand p {
+            color: #9ca3af; font-size: 0.9rem; line-height: 1.6; max-width: 300px;
+        }
+        .role-badges {
+            display: flex; gap: 8px; flex-wrap: wrap; margin-top: 36px;
+        }
+        .role-badge {
+            padding: 5px 14px; border-radius: 999px;
+            font-size: 0.78rem; font-weight: 500;
+            border: 1px solid rgba(255,255,255,0.12);
+            color: #d1d5db; background: rgba(255,255,255,0.06);
+        }
+
+        /* ── Right Panel ── */
+        .right-panel {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            padding: 40px 20px; background: var(--bg);
+        }
+        .form-card { width: 100%; max-width: 400px; }
+
+        .form-card-header { margin-bottom: 28px; }
+        .form-card-header h2 { font-size: 1.5rem; font-weight: 700; color: var(--text); }
+        .form-card-header p { color: var(--muted); font-size: 0.88rem; margin-top: 4px; }
+
+        /* ── Alert ── */
+        .alert {
+            background: var(--danger-bg); border: 1px solid #ef9a9a;
+            border-radius: 10px; padding: 12px 16px; margin-bottom: 20px;
+            font-size: 0.875rem; color: var(--danger);
+        }
+        .alert ul { list-style: none; }
+        .alert ul li::before { content: '⚠ '; }
+
+        /* ── Success Alert ── */
+        .alert-success {
+            background: #e8f5e9; border: 1px solid #a5d6a7;
+            border-radius: 10px; padding: 12px 16px; margin-bottom: 20px;
+            font-size: 0.875rem; color: #2e7d32;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .alert-success .material-icons { font-size: 18px; }
+
+        /* ── Forgot Password ── */
+        .forgot-link {
+            display: block; text-align: right; margin-top: 6px;
+            font-size: 0.82rem;
+        }
+        .forgot-link a {
+            color: var(--accent); text-decoration: none; font-weight: 500;
+            transition: color 0.18s;
+        }
+        .forgot-link a:hover { color: var(--danger); }
+
+        /* ── Form ── */
+        .form-group { margin-bottom: 18px; }
+        .form-group label {
+            display: block; font-size: 0.82rem; font-weight: 600;
+            color: var(--text); margin-bottom: 7px;
+        }
+        .form-group input {
+            width: 100%; padding: 12px 14px;
+            background: var(--input-bg); border: 1px solid var(--border);
+            border-radius: 10px; color: var(--text);
+            font-family: 'Inter', sans-serif; font-size: 0.95rem; outline: none;
+            transition: border-color 0.18s, box-shadow 0.18s;
+        }
+        .form-group input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(229,57,53,0.1);
+        }
+        .form-group input::placeholder { color: #c0c4d0; }
+
+        /* ── Button ── */
+        .btn-primary {
+            width: 100%; padding: 13px;
+            background: var(--accent);
+            border: none; border-radius: 10px; color: #fff;
+            font-family: 'Inter', sans-serif; font-size: 0.97rem; font-weight: 600;
+            cursor: pointer; transition: background 0.18s, transform 0.15s;
+            margin-top: 6px;
+        }
+        .btn-primary:hover { background: var(--danger); transform: translateY(-1px); }
+
+        /* ── Links ── */
+        .divider {
+            display: flex; align-items: center; gap: 12px;
+            margin: 22px 0; color: var(--muted); font-size: 0.8rem;
+        }
+        .divider::before, .divider::after {
+            content: ''; flex: 1; height: 1px; background: var(--border);
+        }
+        .form-links {
+            display: flex; flex-direction: column; gap: 9px; text-align: center;
+        }
+        .form-links a {
+            color: var(--muted); text-decoration: none; font-size: 0.875rem;
+            transition: color 0.18s;
+        }
+        .form-links a:hover { color: var(--text); }
+        .form-links a span { color: var(--accent); font-weight: 600; }
+
+        @media (max-width: 768px) { .left-panel { display: none; } }
+    </style>
+</head>
+<body>
+
+<!-- Left Branding Panel -->
+<div class="left-panel">
+    <div class="brand">
+        <div class="brand-logo">S</div>
+        <h1>Smart <span>Commerce</span> Core</h1>
+        <p>Your all-in-one intelligent learning management system for commerce education.</p>
+        <div class="role-badges">
+            <span class="role-badge">👤 Students</span>
+            <span class="role-badge">🎓 Tutors</span>
+            <span class="role-badge">👪 Parents</span>
+            <span class="role-badge">⚙️ Admins</span>
+        </div>
+    </div>
+</div>
+
+<!-- Right Login Panel -->
+<div class="right-panel">
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2>Welcome back</h2>
+            <p>Sign in to your account to continue</p>
+        </div>
+
+        <?php
+            $pwResetSuccess = $_SESSION['_flash']['pw_reset_success'] ?? null;
+            unset($_SESSION['_flash']['pw_reset_success']);
+        ?>
+        <?php if ($pwResetSuccess): ?>
+            <div class="alert-success"><span class="material-icons">check_circle</span> <?= htmlspecialchars($pwResetSuccess, ENT_QUOTES, 'UTF-8') ?></div>
+        <?php endif; ?>
+
+        <?php if (!empty($errors)): ?>
+            <div class="alert" role="alert">
+                <ul>
+                    <?php foreach ($errors as $err): ?>
+                        <li><?= htmlspecialchars($err, ENT_QUOTES, 'UTF-8') ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+
+        <form method="POST" action="<?= BASE_URL ?>/login" novalidate>
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf, ENT_QUOTES, 'UTF-8') ?>">
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input
+                    type="email" id="email" name="email"
+                    value="<?= htmlspecialchars($email ?? '', ENT_QUOTES, 'UTF-8') ?>"
+                    placeholder="you@example.com" required autocomplete="email"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input
+                    type="password" id="password" name="password"
+                    placeholder="Enter your password" required autocomplete="current-password"
+                >
+                <div class="forgot-link">
+                    <a href="<?= BASE_URL ?>/forgot-password">Forgot password?</a>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary" id="btn-login">Sign In →</button>
+        </form>
+
+        <div class="divider">or register as</div>
+
+        <div class="form-links">
+            <a href="<?= BASE_URL ?>/register">New student? <span>Register here</span></a>
+
+            <a href="<?= BASE_URL ?>/parent-register">Are you a parent? <span>Create account</span></a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
