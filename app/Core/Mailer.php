@@ -24,7 +24,8 @@ class Mailer
         string $name,
         string $subject,
         string $body,
-        string $altBody = ''
+        string $altBody = '',
+        array $embeddedImages = []
     ): bool {
 
         $smtpUser = $_ENV['SMTP_USER'] ?? '';
@@ -57,6 +58,16 @@ class Mailer
             $mail->Subject = $subject;
             $mail->Body = $body;
             $mail->AltBody = $altBody ?: strip_tags($body);
+
+            foreach ($embeddedImages as $img) {
+                $mail->addStringEmbeddedImage(
+                    $img['data'],
+                    $img['cid'],
+                    $img['name'] ?? '',
+                    $img['encoding'] ?? PHPMailer::ENCODING_BASE64,
+                    $img['type'] ?? ''
+                );
+            }
 
             return $mail->send();
 

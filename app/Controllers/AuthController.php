@@ -196,13 +196,51 @@ class AuthController extends Controller
             'is_active' => 0,
         ]);
 
+        // Generate QR Token
+        $qrData = [
+            'user_id' => $userId,
+            'name' => $name,
+            'email' => $email
+        ];
+        $qrToken = base64_encode(json_encode($qrData));
+
         // Create student profile row
         $studentModel = new Student();
         $studentModel->create([
             'user_id' => $userId,
             'parent_name' => $parentName,
-            'parent_email' => $parentEmail
+            'parent_email' => $parentEmail,
+            'qr_code' => $qrToken
         ]);
+
+        // Simulated email sending logic for QR
+        try {
+            $subject = 'Your QR Attendance Code — Smart Commerce Core';
+            $qrImageUrl = "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=" . urlencode($qrToken);
+            
+            $qrContent = @file_get_contents($qrImageUrl);
+            $embeddedImages = [];
+            $imgSrc = $qrImageUrl;
+
+            if ($qrContent) {
+                $embeddedImages[] = [
+                    'data' => $qrContent,
+                    'cid' => 'qrcode',
+                    'name' => 'qrcode.png',
+                    'type' => 'image/png'
+                ];
+                $imgSrc = "cid:qrcode";
+            }
+
+            $body = "<p>Welcome {$name}!</p>
+                     <p>Here is your personalized QR Attendance Code:</p>
+                     <p><img src=\"{$imgSrc}\" alt=\"QR Code\" style=\"display:block; margin:20px 0; border:1px solid #ddd; padding:10px; border-radius:12px;\"></p>
+                     <p>Please save this QR code to your phone. You will need to scan it at the entrance to mark your attendance.</p>
+                     <p>Your raw token (if image does not load): <code>{$qrToken}</code></p>";
+            \App\Core\Mailer::send($email, $name, $subject, $body, "Your QR Token: {$qrToken}", $embeddedImages);
+        } catch (\Exception $e) {
+            // Log or ignore
+        }
 
         $this->redirect('/pending-approval');
     }

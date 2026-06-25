@@ -66,6 +66,7 @@ use App\Controllers\AdminController;
 use App\Controllers\TutorController;
 use App\Controllers\StudentController;
 use App\Controllers\ParentController;
+use App\Controllers\AttendanceController;
 
 // ── Public / Auth Routes ──────────────────────────────────────────────────────
 $router->get('/',                [AuthController::class, 'index']);
@@ -96,6 +97,34 @@ $router->post('/admin/approve-user',  [AdminController::class, 'approveUser'],  
 $router->post('/admin/reject-user',   [AdminController::class, 'rejectUser'],       [$requireAdmin]);
 $router->post('/admin/toggle-user',   [AdminController::class, 'toggleUser'],       [$requireAdmin]);
 $router->post('/admin/enable-parent-control', [AdminController::class, 'enableParentControl'], [$requireAdmin]);
+
+// Attendance Scanning (Admin)
+$router->get('/admin/attendance/scan',    [AttendanceController::class, 'scan'],            [$requireAdmin]);
+$router->post('/admin/attendance/verify', [AttendanceController::class, 'verifyQrScan'],    [$requireAdmin]);
+$router->post('/admin/attendance/confirm',[AttendanceController::class, 'confirmAttendance'],[$requireAdmin]);
+$router->post('/admin/attendance/sessions/start', [AttendanceController::class, 'startSession'], [$requireAdmin]);
+$router->post('/admin/attendance/sessions/close', [AttendanceController::class, 'closeSession'], [$requireAdmin]);
+$router->get('/admin/attendance/log',     [AttendanceController::class, 'log'],             [$requireAdmin]);
+
+// Subjects and Classes (Admin)
+use App\Controllers\SubjectController;
+use App\Controllers\ClassController;
+$router->get('/admin/subjects',           [SubjectController::class, 'index'],              [$requireAdmin]);
+$router->get('/admin/subjects/create',    [SubjectController::class, 'createForm'],         [$requireAdmin]);
+$router->post('/admin/subjects/create',   [SubjectController::class, 'create'],             [$requireAdmin]);
+$router->get('/admin/subjects/edit',      [SubjectController::class, 'editForm'],           [$requireAdmin]);
+$router->post('/admin/subjects/edit',     [SubjectController::class, 'edit'],               [$requireAdmin]);
+$router->post('/admin/subjects/delete',   [SubjectController::class, 'delete'],             [$requireAdmin]);
+$router->get('/admin/classes',            [ClassController::class, 'index'],                [$requireAdmin]);
+$router->get('/admin/classes/create',     [ClassController::class, 'createForm'],           [$requireAdmin]);
+$router->post('/admin/classes/create',    [ClassController::class, 'create'],               [$requireAdmin]);
+$router->get('/admin/classes/edit',       [ClassController::class, 'editForm'],             [$requireAdmin]);
+$router->post('/admin/classes/edit',      [ClassController::class, 'edit'],                 [$requireAdmin]);
+$router->post('/admin/classes/delete',    [ClassController::class, 'delete'],               [$requireAdmin]);
+$router->get('/admin/classes/enrollments', [ClassController::class, 'enrollments'],         [$requireAdmin]);
+$router->post('/admin/classes/enroll',    [ClassController::class, 'enroll'],               [$requireAdmin]);
+$router->post('/admin/classes/unenroll',  [ClassController::class, 'unenroll'],             [$requireAdmin]);
+
 // Forgot Password (OTP-based self-service)
 $router->get('/forgot-password',  [AuthController::class, 'forgotPasswordForm']);
 $router->post('/forgot-password', [AuthController::class, 'forgotPassword']);

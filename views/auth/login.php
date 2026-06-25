@@ -193,12 +193,7 @@
         <div class="brand-logo">S</div>
         <h1>Smart <span>Commerce</span> Core</h1>
         <p>Your all-in-one intelligent learning management system for commerce education.</p>
-        <div class="role-badges">
-            <span class="role-badge">👤 Students</span>
-            <span class="role-badge">🎓 Tutors</span>
-            <span class="role-badge">👪 Parents</span>
-            <span class="role-badge">⚙️ Admins</span>
-        </div>
+        
     </div>
 </div>
 
@@ -259,7 +254,6 @@
         <div class="form-links">
             <a href="<?= BASE_URL ?>/register">New student? <span>Register here</span></a>
 
-            <a href="<?= BASE_URL ?>/parent-register">Are you a parent? <span>Create account</span></a>
         </div>
     </div>
 </div>
