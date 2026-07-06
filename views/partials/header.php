@@ -36,6 +36,10 @@ $pathParts = array_values(array_filter(explode('/', $relativePath)));
             <a href="<?= BASE_URL ?>/admin/classes" class="nav-link <?= strpos($relativePath, '/admin/classes') === 0 ? 'active' : '' ?>"><span class="material-icons">class</span> Classes</a>
             <a href="<?= BASE_URL ?>/admin/attendance/scan" class="nav-link <?= $relativePath === '/admin/attendance/scan' ? 'active' : '' ?>"><span class="material-icons">event_available</span> Scan Attendance</a>
             <a href="<?= BASE_URL ?>/admin/attendance/log" class="nav-link <?= $relativePath === '/admin/attendance/log' ? 'active' : '' ?>"><span class="material-icons">calendar_month</span> Attendance Log</a>
+
+            <div class="nav-section-label">Finance</div>
+            <a href="<?= BASE_URL ?>/admin/finance/collect" class="nav-link <?= $relativePath === '/admin/finance/collect' ? 'active' : '' ?>"><span class="material-icons">payments</span> Fee Collection</a>
+            <a href="<?= BASE_URL ?>/admin/finance/records" class="nav-link <?= $relativePath === '/admin/finance/records' ? 'active' : '' ?>"><span class="material-icons">receipt_long</span> Payment Records</a>
         </nav>
         <div class="sidebar-footer">
             <a href="<?= BASE_URL ?>/logout" class="btn-logout"><span class="material-icons">logout</span> Sign Out</a>

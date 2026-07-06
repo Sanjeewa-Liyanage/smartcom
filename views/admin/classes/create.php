@@ -71,6 +71,10 @@ require VIEW_PATH . '/partials/header.php';
                 </div>
             </div>
             <div class="form-group" style="margin-top:16px;">
+                <label class="form-label">Monthly Fee (Rs.)</label>
+                <input type="number" step="0.01" name="monthly_fee" class="form-control" placeholder="0.00" required>
+            </div>
+            <div class="form-group" style="margin-top:16px;">
                 <label class="form-label">Cover Image (Optional)</label>
                 <input type="file" name="cover_image" class="form-control" accept="image/*">
             </div>
