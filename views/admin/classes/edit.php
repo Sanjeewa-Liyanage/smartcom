@@ -86,6 +86,10 @@ require VIEW_PATH . '/partials/header.php';
                     <input type="time" name="schedule_time" class="form-control" value="<?= htmlspecialchars($scheduleTime) ?>" required>
                 </div>
             </div>
+            <div class="form-group" style="margin-top:16px;">
+                <label class="form-label">Monthly Fee (Rs.)</label>
+                <input type="number" step="0.01" name="monthly_fee" class="form-control" value="<?= htmlspecialchars($class['monthly_fee'] ?? '0.00') ?>" required>
+            </div>
             <div class="form-group">
                 <label class="form-label">Status</label>
                 <select name="status" class="form-control" required style="background-color: #fff;">

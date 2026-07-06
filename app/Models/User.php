@@ -31,6 +31,11 @@ class User extends Model
         return $this->findByEmail($email) !== null;
     }
 
+    public function findBySccId(string $sccId): ?array
+    {
+        return $this->findBy('scc_id', $sccId);
+    }
+
     // ── Creation ──────────────────────────────────────────────────────────────
 
     /**
@@ -44,7 +49,14 @@ class User extends Model
             PASSWORD_BCRYPT,
             ['cost' => 12]
         );
-        return $this->create($data);
+        
+        $userId = $this->create($data);
+        
+        // Generate and set scc_id
+        $sccId = 'SCC-' . str_pad((string)$userId, 6, '0', STR_PAD_LEFT);
+        $this->update($userId, ['scc_id' => $sccId]);
+        
+        return $userId;
     }
 
     // ── Auth ──────────────────────────────────────────────────────────────────
@@ -79,7 +91,7 @@ class User extends Model
      */
     public function getAllWithFilters(?string $role = null, ?string $status = null): array
     {
-        $sql    = 'SELECT u.*, s.parent_id FROM `users` u LEFT JOIN `students` s ON u.user_id = s.user_id WHERE 1=1';
+        $sql    = 'SELECT u.*, s.parent_id, s.parent_name, s.parent_email, s.qr_code FROM `users` u LEFT JOIN `students` s ON u.user_id = s.user_id WHERE 1=1';
         $params = [];
 
         if ($role !== null && $role !== '') {
