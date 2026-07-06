@@ -62,9 +62,9 @@ class ClassController extends Controller
         $scheduleDate = trim($_POST['schedule_day'] ?? '');
         $scheduleTime = trim($_POST['schedule_time'] ?? '');
         
-        // Format time properly if needed, e.g. "08:00" -> "08:00 AM"
         $formattedTime = $scheduleTime ? date('h:i A', strtotime($scheduleTime)) : '';
         $schedule = trim("$scheduleDate $formattedTime");
+        $monthlyFee = (float)($_POST['monthly_fee'] ?? 0.00);
 
         if (!$subjectId || !$tutorId || empty($name)) {
             $this->flash('error', 'Subject, Tutor, and Class Name are required.');
@@ -91,7 +91,8 @@ class ClassController extends Controller
             'class_type' => $classType,
             'schedule_details' => $schedule,
             'status' => 'active',
-            'cover_image' => $coverImage
+            'cover_image' => $coverImage,
+            'monthly_fee' => $monthlyFee
         ]);
 
         $this->flash('success', 'Class created successfully.');
@@ -149,6 +150,7 @@ class ClassController extends Controller
         }
         $schedule = trim("$scheduleDate $formattedTime");
         $status = trim($_POST['status'] ?? 'active');
+        $monthlyFee = (float)($_POST['monthly_fee'] ?? 0.00);
 
         if (!$subjectId || !$tutorId || empty($name)) {
             $this->flash('error', 'Subject, Tutor, and Class Name are required.');
@@ -187,7 +189,8 @@ class ClassController extends Controller
             'class_type' => $classType,
             'schedule_details' => $schedule,
             'status' => $status,
-            'cover_image' => $coverImage
+            'cover_image' => $coverImage,
+            'monthly_fee' => $monthlyFee
         ]);
 
         $this->flash('success', 'Class updated successfully.');
@@ -248,7 +251,7 @@ class ClassController extends Controller
 
         // Get active students who are NOT enrolled in this class
         $availableStudents = $db->query("
-            SELECT u.user_id, u.name, s.student_id
+            SELECT u.user_id, u.name, u.scc_id, s.student_id
             FROM users u
             JOIN students s ON u.user_id = s.user_id
             WHERE u.role = 'student' AND u.status = 'active'

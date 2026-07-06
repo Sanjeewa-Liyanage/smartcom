@@ -67,6 +67,7 @@ use App\Controllers\TutorController;
 use App\Controllers\StudentController;
 use App\Controllers\ParentController;
 use App\Controllers\AttendanceController;
+use App\Controllers\FinanceController;
 
 // ── Public / Auth Routes ──────────────────────────────────────────────────────
 $router->get('/',                [AuthController::class, 'index']);
@@ -105,6 +106,12 @@ $router->post('/admin/attendance/confirm',[AttendanceController::class, 'confirm
 $router->post('/admin/attendance/sessions/start', [AttendanceController::class, 'startSession'], [$requireAdmin]);
 $router->post('/admin/attendance/sessions/close', [AttendanceController::class, 'closeSession'], [$requireAdmin]);
 $router->get('/admin/attendance/log',     [AttendanceController::class, 'log'],             [$requireAdmin]);
+
+// Finance / Fee Collection (Admin)
+$router->get('/admin/finance/collect',    [FinanceController::class, 'collectFee'],         [$requireAdmin]);
+$router->post('/admin/finance/fetch-student', [FinanceController::class, 'fetchStudent'],   [$requireAdmin]);
+$router->post('/admin/finance/pay',       [FinanceController::class, 'processPayment'],     [$requireAdmin]);
+$router->get('/admin/finance/records',    [FinanceController::class, 'records'],            [$requireAdmin]);
 
 // Subjects and Classes (Admin)
 use App\Controllers\SubjectController;
