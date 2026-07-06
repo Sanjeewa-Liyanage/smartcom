@@ -21,7 +21,7 @@ require VIEW_PATH . '/partials/header.php';
 
 <div class="custom-card" style="max-width: 600px;">
     <div class="custom-card-body">
-        <form action="<?= BASE_URL ?>/admin/classes/edit" method="POST">
+        <form action="<?= BASE_URL ?>/admin/classes/edit" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="class_id" value="<?= $class['class_id'] ?>">
             <div class="form-group">
                 <label class="form-label">Subject</label>
@@ -48,6 +48,14 @@ require VIEW_PATH . '/partials/header.php';
             <div class="form-group">
                 <label class="form-label">Class Name</label>
                 <input type="text" name="name" class="form-control" value="<?= htmlspecialchars($class['name']) ?>" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Class Type</label>
+                <select name="class_type" class="form-control" required style="background-color: #fff;">
+                    <option value="theory" <?= (isset($class['class_type']) && $class['class_type'] === 'theory') ? 'selected' : '' ?>>Theory</option>
+                    <option value="revision" <?= (isset($class['class_type']) && $class['class_type'] === 'revision') ? 'selected' : '' ?>>Revision</option>
+                    <option value="paper" <?= (isset($class['class_type']) && $class['class_type'] === 'paper') ? 'selected' : '' ?>>Paper</option>
+                </select>
             </div>
             <?php
                 $details = $class['schedule_details'] ?? '';
@@ -84,6 +92,16 @@ require VIEW_PATH . '/partials/header.php';
                     <option value="active" <?= $class['status'] === 'active' ? 'selected' : '' ?>>Active</option>
                     <option value="inactive" <?= $class['status'] === 'inactive' ? 'selected' : '' ?>>Inactive</option>
                 </select>
+            </div>
+            <div class="form-group" style="margin-top:16px;">
+                <label class="form-label">Cover Image</label>
+                <?php if (!empty($class['cover_image'])): ?>
+                    <div style="margin-bottom: 8px;">
+                        <img src="<?= BASE_URL ?>/public/cover_images/<?= htmlspecialchars($class['cover_image']) ?>" alt="Current Cover" style="width: 150px; border-radius: 8px; border: 1px solid var(--border);">
+                    </div>
+                <?php endif; ?>
+                <input type="file" name="cover_image" class="form-control" accept="image/*">
+                <small style="color:var(--muted); font-size: 0.75rem;">Leave blank to keep existing image.</small>
             </div>
             <div style="margin-top:24px;">
                 <button type="submit" class="btn btn-primary">Update Class</button>

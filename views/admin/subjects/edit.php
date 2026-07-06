@@ -1,4 +1,9 @@
-<?php require VIEW_PATH . '/partials/header.php'; ?>
+<?php
+/**
+ * @var array $subject
+ */
+
+require VIEW_PATH . '/partials/header.php'; ?>
 <div class="page-header">
     <h2>Edit Subject</h2>
     <p>Update the subject details.</p>

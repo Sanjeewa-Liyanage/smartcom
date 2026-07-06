@@ -109,6 +109,7 @@ $router->get('/admin/attendance/log',     [AttendanceController::class, 'log'], 
 // Subjects and Classes (Admin)
 use App\Controllers\SubjectController;
 use App\Controllers\ClassController;
+use App\Controllers\TutorMaterialController;
 $router->get('/admin/subjects',           [SubjectController::class, 'index'],              [$requireAdmin]);
 $router->get('/admin/subjects/create',    [SubjectController::class, 'createForm'],         [$requireAdmin]);
 $router->post('/admin/subjects/create',   [SubjectController::class, 'create'],             [$requireAdmin]);
@@ -135,9 +136,18 @@ $router->post('/reset-password',  [AuthController::class, 'resetPassword']);
 
 // ── Tutor Routes ──────────────────────────────────────────────────────────────
 $router->get('/tutor/dashboard',  [TutorController::class,   'dashboard'], [$requireTutor]);
+$router->get('/tutor/classes',    [TutorMaterialController::class, 'classes'], [$requireTutor]);
+$router->get('/tutor/classes/view',[TutorMaterialController::class, 'viewClass'], [$requireTutor]);
+$router->get('/tutor/topics/view', [TutorMaterialController::class, 'viewTopic'], [$requireTutor]);
+$router->post('/tutor/topics/store', [TutorMaterialController::class, 'storeTopic'], [$requireTutor]);
+$router->post('/tutor/materials/upload', [TutorMaterialController::class, 'uploadMaterial'], [$requireTutor]);
+$router->post('/tutor/materials/delete', [TutorMaterialController::class, 'deleteMaterial'], [$requireTutor]);
 
 // ── Student Routes ────────────────────────────────────────────────────────────
-$router->get('/student/dashboard',[StudentController::class, 'dashboard'], [$requireStudent]);
+$router->get('/student/dashboard',      [StudentController::class, 'dashboard'], [$requireStudent]);
+$router->get('/student/classes',        [StudentController::class, 'classes'], [$requireStudent]);
+$router->get('/student/classes/view',   [StudentController::class, 'viewClass'], [$requireStudent]);
+$router->get('/student/topics/view',    [StudentController::class, 'viewTopic'], [$requireStudent]);
 
 // ── Parent Routes ─────────────────────────────────────────────────────────────
 $router->get('/parent/dashboard', [ParentController::class,  'dashboard'], [$requireParent]);

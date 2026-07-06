@@ -24,3 +24,6 @@ define('SESSION_LIFETIME', 60 * 60 * 8);  // 8 hours in seconds
 define('APP_NAME',    'Smart Commerce Core');
 define('APP_VERSION', '1.0.0');
 define('APP_ENV',     'development');  // 'development' | 'production'
+
+// ── Timezone ──────────────────────────────────────────────────────────────────
+date_default_timezone_set('Asia/Colombo');

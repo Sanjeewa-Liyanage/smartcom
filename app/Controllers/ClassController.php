@@ -58,6 +58,7 @@ class ClassController extends Controller
         $subjectId = (int)($_POST['subject_id'] ?? 0);
         $tutorId = (int)($_POST['tutor_id'] ?? 0);
         $name = trim($_POST['name'] ?? '');
+        $classType = trim($_POST['class_type'] ?? 'theory');
         $scheduleDate = trim($_POST['schedule_day'] ?? '');
         $scheduleTime = trim($_POST['schedule_time'] ?? '');
         
@@ -71,13 +72,26 @@ class ClassController extends Controller
             return;
         }
 
+        $coverImage = null;
+        if (isset($_FILES['cover_image']) && $_FILES['cover_image']['error'] === UPLOAD_ERR_OK) {
+            $ext = pathinfo($_FILES['cover_image']['name'], PATHINFO_EXTENSION);
+            $filename = uniqid('cover_') . '.' . $ext;
+            $uploadDir = ROOT_PATH . '/public/cover_images';
+            if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+            if (move_uploaded_file($_FILES['cover_image']['tmp_name'], $uploadDir . '/' . $filename)) {
+                $coverImage = $filename;
+            }
+        }
+
         $classModel = new CourseClass();
         $classModel->create([
             'subject_id' => $subjectId,
             'tutor_id' => $tutorId,
             'name' => $name,
+            'class_type' => $classType,
             'schedule_details' => $schedule,
-            'status' => 'active'
+            'status' => 'active',
+            'cover_image' => $coverImage
         ]);
 
         $this->flash('success', 'Class created successfully.');
@@ -125,6 +139,7 @@ class ClassController extends Controller
         $subjectId = (int)($_POST['subject_id'] ?? 0);
         $tutorId = (int)($_POST['tutor_id'] ?? 0);
         $name = trim($_POST['name'] ?? '');
+        $classType = trim($_POST['class_type'] ?? 'theory');
         $scheduleDate = trim($_POST['schedule_day'] ?? '');
         $scheduleTime = trim($_POST['schedule_time'] ?? '');
         
@@ -142,18 +157,37 @@ class ClassController extends Controller
         }
 
         $classModel = new CourseClass();
-        if (!$classModel->find($id)) {
+        $existingClass = $classModel->find($id);
+        if (!$existingClass) {
             $this->flash('error', 'Class not found.');
             $this->redirect('/admin/classes');
             return;
+        }
+
+        $coverImage = $existingClass['cover_image'] ?? null;
+        if (isset($_FILES['cover_image']) && $_FILES['cover_image']['error'] === UPLOAD_ERR_OK) {
+            $ext = pathinfo($_FILES['cover_image']['name'], PATHINFO_EXTENSION);
+            $filename = uniqid('cover_') . '.' . $ext;
+            $uploadDir = ROOT_PATH . '/public/cover_images';
+            if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+            if (move_uploaded_file($_FILES['cover_image']['tmp_name'], $uploadDir . '/' . $filename)) {
+                $coverImage = $filename;
+                // Optional: delete old image if it existed and wasn't placeholder
+                if (!empty($existingClass['cover_image']) && $existingClass['cover_image'] !== 'placeholder.jpeg') {
+                    $oldPath = $uploadDir . '/' . $existingClass['cover_image'];
+                    if (file_exists($oldPath)) unlink($oldPath);
+                }
+            }
         }
 
         $classModel->update($id, [
             'subject_id' => $subjectId,
             'tutor_id' => $tutorId,
             'name' => $name,
+            'class_type' => $classType,
             'schedule_details' => $schedule,
-            'status' => $status
+            'status' => $status,
+            'cover_image' => $coverImage
         ]);
 
         $this->flash('success', 'Class updated successfully.');

@@ -20,7 +20,7 @@ require VIEW_PATH . '/partials/header.php';
 
 <div class="custom-card" style="max-width: 600px;">
     <div class="custom-card-body">
-        <form action="<?= BASE_URL ?>/admin/classes/create" method="POST">
+        <form action="<?= BASE_URL ?>/admin/classes/create" method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label class="form-label">Subject</label>
                 <select name="subject_id" class="form-control" required style="background-color: #fff;">
@@ -43,6 +43,14 @@ require VIEW_PATH . '/partials/header.php';
                 <label class="form-label">Class Name (e.g. 2026 A/L Accounting)</label>
                 <input type="text" name="name" class="form-control" required>
             </div>
+            <div class="form-group">
+                <label class="form-label">Class Type</label>
+                <select name="class_type" class="form-control" required style="background-color: #fff;">
+                    <option value="theory">Theory</option>
+                    <option value="revision">Revision</option>
+                    <option value="paper">Paper</option>
+                </select>
+            </div>
             <div class="form-group" style="display:flex; gap:16px;">
                 <div style="flex:1;">
                     <label class="form-label">Schedule Day</label>
@@ -61,6 +69,10 @@ require VIEW_PATH . '/partials/header.php';
                     <label class="form-label">Schedule Time</label>
                     <input type="time" name="schedule_time" class="form-control" required>
                 </div>
+            </div>
+            <div class="form-group" style="margin-top:16px;">
+                <label class="form-label">Cover Image (Optional)</label>
+                <input type="file" name="cover_image" class="form-control" accept="image/*">
             </div>
             <div style="margin-top:24px;">
                 <button type="submit" class="btn btn-primary">Save Class</button>

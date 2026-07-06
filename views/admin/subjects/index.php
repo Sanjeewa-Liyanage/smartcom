@@ -1,4 +1,11 @@
-<?php require VIEW_PATH . '/partials/header.php'; ?>
+<?php
+
+/**
+ * @var array $subjects
+ */
+
+require VIEW_PATH . '/partials/header.php'; 
+?>
 <div class="page-header">
     <h2>Manage Subjects</h2>
     <p>View, edit, and manage all academic subjects.</p>
